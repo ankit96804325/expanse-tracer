@@ -1,28 +1,28 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const path = require("path");
 const expenseRoutes = require("./routes/expenseRoutes");
+require("dotenv").config();
 
 const app = express();
 
-// MongoDB
-mongoose.connect(process.env.MONGO_URL || "mongodb://127.0.0.1:27017/expenseTracker")
-    .then(() => console.log("MongoDB Connected"))
-    .catch(err => console.log(err));
+mongoose.connect(process.env.MONGO_URL)
+  .then(() => console.log("MongoDB Connected"))
+  .catch(err => console.error(err));
+
 
 // Middleware
 app.set("view engine", "ejs");
+
+// 👇 IMPORTANT for Vercel
+app.set("views", path.join(__dirname, "views"));
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "public")));
 
 // Routes
 app.use("/", expenseRoutes);
 
-// Local only
-if (!process.env.VERCEL) {
-    app.listen(3000, () => {
-        console.log("Server running at http://localhost:3000");
-    });
-}
-
+// ❌ NO app.listen() on Vercel
 module.exports = app;
