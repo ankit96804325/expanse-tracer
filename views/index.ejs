@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Expense Tracker</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="dashboard">
+
+    <!-- LEFT SIDE -->
+    <div class="container">
+        <h1>💰 Expense Tracker</h1>
+
+        <form action="/add" method="POST">
+            <input type="number" name="amount" placeholder="Amount (₹)" required>
+
+            <select name="category" required>
+                <option value="">Select Category</option>
+                <option value="Food">Food</option>
+                <option value="Travel">Travel</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Medicines">Medicines</option>
+                <option value="Stationery">Stationery</option>
+                <option value="Electricity">Electricity</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <input type="date" name="date" required>
+            <input type="text" name="note" placeholder="Note (optional)">
+            <button type="submit">Add Expense</button>
+        </form>
+
+        <h2>Expenses</h2>
+
+        <ul id="expenseList">
+            <% expenses.forEach(exp => { %>
+                <li 
+                    data-category="<%= exp.category %>" 
+                    data-amount="<%= exp.amount %>">
+                    
+                    <span>
+                        <%= exp.category %> - ₹<%= exp.amount %>
+                    </span>
+                    <a href="/delete/<%= exp._id %>">❌</a>
+                </li>
+            <% }) %>
+        </ul>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="chart-container">
+        <h2>Category Breakdown</h2>
+        <canvas id="expenseChart"></canvas>
+    </div>
+
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="/js/script.js"></script>
+
+</html>
